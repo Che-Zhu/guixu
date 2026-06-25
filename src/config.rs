@@ -9,10 +9,6 @@ impl SecretString {
     pub fn as_str(&self) -> &str {
         &self.0
     }
-
-    pub fn expose_for_test(&self) -> &str {
-        &self.0
-    }
 }
 
 impl std::fmt::Debug for SecretString {

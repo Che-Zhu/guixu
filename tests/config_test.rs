@@ -17,8 +17,8 @@ fn loads_required_youzhiyouxing_cookie() {
 
     assert_eq!(config.bind_addr, "127.0.0.1:3000");
     assert_eq!(
-        config.youzhiyouxing_cookie.expose_for_test(),
-        "_weasley_key=abc123"
+        config.youzhiyouxing_cookie,
+        guixu::config::SecretString::new("_weasley_key=abc123".to_string())
     );
 }
 

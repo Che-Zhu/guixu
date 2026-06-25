@@ -26,10 +26,9 @@ pub fn parse_youzhiyouxing_pages(
     }
 
     let dashboard = DashboardSummary {
-        family_total_assets: number_after(&dashboard_text, "家庭总资产")
-            .ok_or(YouzhiyouxingParseError::MissingRequiredField(
-                "dashboard.family_total_assets",
-            ))?,
+        family_total_assets: number_after(&dashboard_text, "家庭总资产").ok_or(
+            YouzhiyouxingParseError::MissingRequiredField("dashboard.family_total_assets"),
+        )?,
         asset_change: signed_number_after(&dashboard_text, "资产减少").map(|value| -value),
         debt_ratio: number_after(&dashboard_text, "资产负债率").ok_or(
             YouzhiyouxingParseError::MissingRequiredField("dashboard.debt_ratio"),
@@ -69,7 +68,8 @@ pub fn parse_youzhiyouxing_pages(
 }
 
 fn reject_login_page(text: &str) -> Result<(), YouzhiyouxingParseError> {
-    if text.contains("做聪明的投资者") || text.contains("登录") && !text.contains("退出") {
+    if text.contains("做聪明的投资者") || text.contains("登录") && !text.contains("退出")
+    {
         return Err(YouzhiyouxingParseError::SessionExpired);
     }
 

@@ -42,3 +42,16 @@ pub enum YouzhiyouxingParseError {
     #[error("missing required field: {0}")]
     MissingRequiredField(&'static str),
 }
+
+#[derive(Debug, thiserror::Error)]
+pub enum YouzhiyouxingFetchError {
+    #[error("youzhiyouxing request failed: {0}")]
+    Request(#[from] reqwest::Error),
+    #[error("youzhiyouxing session expired")]
+    SessionExpired,
+    #[error("youzhiyouxing {path} returned unexpected status: {status}")]
+    UnexpectedStatus {
+        path: String,
+        status: reqwest::StatusCode,
+    },
+}
