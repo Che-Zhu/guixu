@@ -33,6 +33,7 @@ Do not build:
 ## File Structure
 
 - `Cargo.toml`: Rust crate metadata and dependencies.
+- `Cargo.lock`: Locked dependency graph for this Rust application.
 - `.env.example`: Safe env names only, no real secrets.
 - `src/main.rs`: Binary entrypoint; loads env, builds app, binds listener.
 - `src/lib.rs`: Library module exports for tests.
@@ -106,6 +107,7 @@ Status code: `502 Bad Gateway`.
 
 **Files:**
 - Create: `Cargo.toml`
+- Create: `Cargo.lock`
 - Create: `src/main.rs`
 - Create: `src/lib.rs`
 - Create: `src/app.rs`
@@ -243,7 +245,7 @@ Expected: command succeeds with zero tests or only compile checks.
 Run:
 
 ```bash
-git add Cargo.toml .env.example .gitignore src
+git add Cargo.toml Cargo.lock .env.example .gitignore src
 git commit -m "feat: scaffold rust api service"
 ```
 
