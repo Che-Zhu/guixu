@@ -21,7 +21,7 @@ COPY --from=builder /app/target/release/guixu /usr/local/bin/guixu
 
 USER guixu
 
-ENV GUIXU_BIND_ADDR=0.0.0.0:3000
+ENV PORT=3000
 ENV RUST_LOG=guixu=info
 
 EXPOSE 3000

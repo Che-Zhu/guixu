@@ -32,8 +32,7 @@ pub enum ConfigError {
 }
 
 pub fn load_config_from_env() -> Result<AppConfig, ConfigError> {
-    let bind_addr =
-        std::env::var("GUIXU_BIND_ADDR").unwrap_or_else(|_| "127.0.0.1:3000".to_string());
+    let bind_addr = load_bind_addr_from_env();
     let youzhiyouxing_cookie = std::env::var("YOUZHIYOUXING_COOKIE")
         .map_err(|_| ConfigError::MissingEnv("YOUZHIYOUXING_COOKIE"))?;
 
@@ -48,4 +47,16 @@ pub fn load_config_from_env() -> Result<AppConfig, ConfigError> {
         bind_addr,
         youzhiyouxing_cookie: SecretString::new(youzhiyouxing_cookie),
     })
+}
+
+fn load_bind_addr_from_env() -> String {
+    if let Ok(bind_addr) = std::env::var("GUIXU_BIND_ADDR") {
+        return bind_addr;
+    }
+
+    if let Ok(port) = std::env::var("PORT") {
+        return format!("0.0.0.0:{port}");
+    }
+
+    "127.0.0.1:3000".to_string()
 }
