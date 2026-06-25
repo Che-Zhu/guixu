@@ -331,3 +331,7 @@ Dashboard 上的 `预估储蓄率 **`、`保费收入比 **`、`财务自由度 
 - 页面是 LiveView，交互会走 `/live`，但只读抓取不需要 websocket。
 - Cookie 可能过期，脚本必须检测登录态失效。
 - 如果后续页面结构改版，解析规则需要调整。
+
+## Implementation status
+
+The first Guixu implementation uses Rust, Reqwest, and server-side HTML parsing. Local validation on 2026-06-25 confirmed that a `YOUZHIYOUXING_COOKIE` value containing `_weasley_key=...` can fetch `/dashboard`, `/balance`, `/abooks`, and `/cashflow` as authenticated HTML without using the LiveView websocket.
