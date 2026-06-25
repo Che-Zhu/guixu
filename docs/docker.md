@@ -21,11 +21,13 @@ docker run --rm \
 The container defaults to:
 
 ```env
-GUIXU_BIND_ADDR=0.0.0.0:3000
+PORT=3000
 RUST_LOG=guixu=info
 ```
 
 `YOUZHIYOUXING_COOKIE` is required at runtime. Do not bake `.env` files or real upstream cookies into the image. Pass secrets through the runtime environment supplied by the deployment platform.
+
+On Railway, do not set `GUIXU_BIND_ADDR` to `127.0.0.1:3000`. Railway injects `PORT`, and Guixu binds to `0.0.0.0:$PORT` automatically so the public proxy can reach the container.
 
 ## Smoke Check
 
