@@ -90,17 +90,7 @@ If you fork or borrow from this project, treat it as a reference implementation 
 
 ## Project status
 
-Early development. The core runtime and API surface are still being built.
-
-Integration research lives under `tests/`. The first documented upstream is **Youzhiyouxing** (有知有行) — a finance dashboard backed by Phoenix LiveView rather than a clean JSON API. See [`tests/youzhiyouxing/yx-dashboard-data-source-summary.md`](tests/youzhiyouxing/yx-dashboard-data-source-summary.md).
-
-```text
-guixu/
-├── README.md
-└── tests/
-    └── youzhiyouxing/
-        └── yx-dashboard-data-source-summary.md
-```
+Early development. The first Rust API surface is being built around Youzhiyouxing (有知有行), a finance dashboard backed by Phoenix LiveView rather than a clean JSON API. Research notes live in [`reference/youzhiyouxing/yx-dashboard-data-source-summary.md`](reference/youzhiyouxing/yx-dashboard-data-source-summary.md).
 
 Planned layout as the project grows:
 
