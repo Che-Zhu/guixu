@@ -21,6 +21,7 @@ impl std::fmt::Debug for SecretString {
 pub struct AppConfig {
     pub bind_addr: String,
     pub youzhiyouxing_cookie: SecretString,
+    pub kimi_coding_plan_token: SecretString,
 }
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
@@ -43,9 +44,13 @@ pub fn load_config_from_env() -> Result<AppConfig, ConfigError> {
         return Err(ConfigError::InvalidYouzhiyouxingCookie);
     }
 
+    let kimi_coding_plan_token = std::env::var("KIMI_CODING_PLAN_TOKEN")
+        .map_err(|_| ConfigError::MissingEnv("KIMI_CODING_PLAN_TOKEN"))?;
+
     Ok(AppConfig {
         bind_addr,
         youzhiyouxing_cookie: SecretString::new(youzhiyouxing_cookie),
+        kimi_coding_plan_token: SecretString::new(kimi_coding_plan_token),
     })
 }
 

@@ -75,3 +75,56 @@ content-type: application/json
 ```
 
 Other upstream fetch or parse failures also return `502 Bad Gateway` with an `error` and `message` field.
+
+## Kimi Coding Plan Usage
+
+```http
+GET <base-url>/ai/kimi
+```
+
+Returns the current Kimi Coding Plan quota usage, normalized into three buckets.
+
+Successful response:
+
+```json
+{
+  "quotas": {
+    "five_hour": {
+      "limit": 100,
+      "used": 9,
+      "remaining": 91,
+      "resets_at": "2026-06-26T06:58:12Z"
+    },
+    "weekly": {
+      "limit": 100,
+      "used": 5,
+      "remaining": 95,
+      "resets_at": "2026-07-01T17:58:12Z"
+    },
+    "purchased": {
+      "limit": 100,
+      "remaining": 99
+    }
+  },
+  "meta": {
+    "region": "REGION_CN",
+    "fetched_at": "2026-06-26T10:00:00Z"
+  }
+}
+```
+
+Authentication failed or invalid token response:
+
+```http
+HTTP/1.1 502 Bad Gateway
+content-type: application/json
+```
+
+```json
+{
+  "error": "upstream_authentication_failed",
+  "message": "Kimi API key is invalid or expired. Refresh KIMI_CODING_PLAN_TOKEN."
+}
+```
+
+Other upstream fetch or parse failures also return `502 Bad Gateway` with an `error` and `message` field.

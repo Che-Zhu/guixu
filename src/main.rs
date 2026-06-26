@@ -1,4 +1,5 @@
 use guixu::{
+    ai::kimi::client::{KimiClient, KimiUsageSource},
     app::{build_app, AppState},
     config::load_config_from_env,
     youzhiyouxing::fetch_youzhiyouxing_pages::{YouzhiyouxingClient, YouzhiyouxingPageSource},
@@ -16,8 +17,12 @@ async fn main() {
     let config = load_config_from_env().expect("invalid guixu configuration");
     let youzhiyouxing_client = YouzhiyouxingClient::new(config.youzhiyouxing_cookie.clone())
         .expect("failed to build youzhiyouxing client");
+    let kimi_client = KimiClient::new(config.kimi_coding_plan_token.clone())
+        .expect("failed to build kimi client");
+
     let app_state = AppState {
         youzhiyouxing_source: YouzhiyouxingPageSource::Live(youzhiyouxing_client),
+        kimi_source: KimiUsageSource::Live(kimi_client),
     };
     let listener = tokio::net::TcpListener::bind(&config.bind_addr)
         .await
