@@ -11,9 +11,7 @@ fn clear_env() {
     std::env::remove_var("KIMI_CODING_PLAN_TOKEN");
 }
 
-fn load_config_from_env_with(
-    overrides: &[(String, String)],
-) -> Result<AppConfig, ConfigError> {
+fn load_config_from_env_with(overrides: &[(String, String)]) -> Result<AppConfig, ConfigError> {
     let mut preserved: HashMap<String, Option<String>> = HashMap::new();
     for (key, _) in overrides {
         preserved.insert(key.clone(), std::env::var(key).ok());
@@ -102,6 +100,7 @@ fn explicit_bind_addr_overrides_port_env() {
 }
 
 #[test]
+#[serial]
 fn config_loads_kimi_coding_plan_token() {
     let token = "sk-kimi-test-token";
     let env = HashMap::from([
