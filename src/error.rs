@@ -34,8 +34,7 @@ impl IntoResponse for ApiError {
             ApiError::KimiFetch(KimiFetchError::AuthenticationFailed) => (
                 StatusCode::BAD_GATEWAY,
                 "upstream_authentication_failed",
-                "Kimi API key is invalid or expired. Refresh KIMI_CODING_PLAN_TOKEN."
-                    .to_string(),
+                "Kimi API key is invalid or expired. Refresh KIMI_CODING_PLAN_TOKEN.".to_string(),
             ),
             ApiError::KimiFetch(KimiFetchError::UnexpectedStatus { status }) => (
                 StatusCode::BAD_GATEWAY,

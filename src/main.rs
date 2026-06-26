@@ -17,8 +17,8 @@ async fn main() {
     let config = load_config_from_env().expect("invalid guixu configuration");
     let youzhiyouxing_client = YouzhiyouxingClient::new(config.youzhiyouxing_cookie.clone())
         .expect("failed to build youzhiyouxing client");
-    let kimi_client =
-        KimiClient::new(config.kimi_coding_plan_token.clone()).expect("failed to build kimi client");
+    let kimi_client = KimiClient::new(config.kimi_coding_plan_token.clone())
+        .expect("failed to build kimi client");
 
     let app_state = AppState {
         youzhiyouxing_source: YouzhiyouxingPageSource::Live(youzhiyouxing_client),
