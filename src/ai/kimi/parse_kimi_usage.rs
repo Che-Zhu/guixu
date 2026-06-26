@@ -40,7 +40,7 @@ fn parse_five_hour_bucket(body: &Value) -> Result<QuotaBucket, KimiParseError> {
         .and_then(|v| v.get("detail"))
         .ok_or(KimiParseError::MissingRequiredField("limits[0].detail"))?;
 
-    QuotaBucket::from_value(first)
+    QuotaBucket::from_value_with_optional_used(first)
 }
 
 fn parse_weekly_bucket(body: &Value) -> Result<QuotaBucket, KimiParseError> {
@@ -71,6 +71,20 @@ impl QuotaBucket {
             resets_at: parse_string_field(value, "resetTime")?,
         })
     }
+
+    fn from_value_with_optional_used(value: &Value) -> Result<Self, KimiParseError> {
+        let limit = parse_u64_field(value, "limit")?;
+        let remaining = parse_u64_field(value, "remaining")?;
+        let used =
+            optional_u64_field(value, "used").unwrap_or_else(|| limit.saturating_sub(remaining));
+
+        Ok(QuotaBucket {
+            limit,
+            used,
+            remaining,
+            resets_at: parse_string_field(value, "resetTime")?,
+        })
+    }
 }
 
 fn parse_u64_field(value: &Value, field: &'static str) -> Result<u64, KimiParseError> {
@@ -94,6 +108,18 @@ fn parse_string_field(value: &Value, field: &'static str) -> Result<String, Kimi
         .and_then(|v| v.as_str())
         .map(|s| s.to_string())
         .ok_or(KimiParseError::UnexpectedFieldType(field))
+}
+
+fn optional_u64_field(value: &Value, field: &'static str) -> Option<u64> {
+    value.get(field).and_then(|v| {
+        if let Some(n) = v.as_u64() {
+            Some(n)
+        } else if let Some(s) = v.as_str() {
+            s.parse().ok()
+        } else {
+            None
+        }
+    })
 }
 
 #[cfg(test)]
@@ -140,5 +166,27 @@ mod tests {
         let result =
             parse_kimi_usage(&body, "2026-06-26T10:00:00Z".to_string()).expect("should parse");
         assert_eq!(result.quotas.five_hour.remaining, 91);
+    }
+
+    #[test]
+    fn derives_five_hour_used_when_upstream_omits_it() {
+        let body = json!({
+            "user": { "region": "REGION_CN" },
+            "usage": { "limit": "100", "used": "11", "remaining": "89", "resetTime": "2026-07-01T17:58:12.318501Z" },
+            "limits": [
+                {
+                    "window": { "duration": 300, "timeUnit": "TIME_UNIT_MINUTE" },
+                    "detail": { "limit": "100", "remaining": "100", "resetTime": "2026-06-26T11:58:12.318501Z" }
+                }
+            ],
+            "totalQuota": { "limit": "100", "remaining": "99" }
+        });
+
+        let result =
+            parse_kimi_usage(&body, "2026-06-26T10:00:00Z".to_string()).expect("should parse");
+
+        assert_eq!(result.quotas.five_hour.limit, 100);
+        assert_eq!(result.quotas.five_hour.used, 0);
+        assert_eq!(result.quotas.five_hour.remaining, 100);
     }
 }
