@@ -8,6 +8,7 @@ use serde_json::Value;
 use tower::ServiceExt;
 
 use guixu::{
+    ai::kimi::client::KimiUsageSource,
     app::{build_app, AppState},
     youzhiyouxing::{
         fetch_youzhiyouxing_pages::YouzhiyouxingPageSource,
@@ -25,6 +26,12 @@ async fn youzhiyouxing_route_returns_json() {
     };
     let app = build_app(AppState {
         youzhiyouxing_source: YouzhiyouxingPageSource::Static(Arc::new(pages)),
+        kimi_source: KimiUsageSource::Static(serde_json::json!({
+            "user": { "region": "REGION_CN" },
+            "usage": { "limit": "100", "used": "0", "remaining": "100", "resetTime": "2026-07-01T17:58:12Z" },
+            "limits": [{ "detail": { "limit": "100", "used": "0", "remaining": "100", "resetTime": "2026-06-26T06:58:12Z" } }],
+            "totalQuota": { "limit": "100", "remaining": "100" }
+        })),
     });
 
     let response = app
